@@ -58,7 +58,7 @@ float cosineRule(float a, float b, float c) {
   return (float)(acos((c*c-a*a-b*b)/(bottom)));
 }
 
-void receive(byte[] data, String ip, int port) {
+void receive(byte[] data) {
 
   data = subset(data, 0, data.length);
   String message = new String( data );
