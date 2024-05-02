@@ -11,24 +11,27 @@ void setup() {
 int len1 = 200, len2 = 200;
 float dir1 = 0, dir2 = 0;
 
+int destX = 0, destY = 0, destZ = 0;
+
 Section s = new Section(0, 0, len1), c = new Section(s.endX, s.endY, len2);
 
 void draw() {
   background(255);
   stroke(200);
-  line(0, 400, 800, 400);
-  line(400, 0, 400, 800);
-
-  calculateAngles(s, c, mouseX-400, mouseY-400);
-  c.turnTo(mouseX-400, mouseY-400);
   translate(width/2, height/2);
+  line(0, -400, 0, 400);
+  line(-400, 0, 400, 0);
+
+  calculateAngles(s, c, destX, destY);
+  c.turnTo(destX, destY);
+  
   strokeWeight(5);
   stroke(0);
   s.show();
   strokeWeight(3);
   stroke(255, 0, 0);
   c.show();
-  circle(mouseX-400, mouseY-400, 10);
+  circle(destX, destY, 10);
 }
 
 void calculateAngles(Section first, Section second, int x, int y) {
@@ -57,8 +60,11 @@ float cosineRule(float a, float b, float c) {
 
 void receive(byte[] data, String ip, int port) {
 
-  data = subset(data, 0, data.length-2);
+  data = subset(data, 0, data.length);
   String message = new String( data );
-  
-  println(message);
+  String[] cords = message.split(",");
+  destX = (int)(Double.parseDouble(cords[0])*width/2);
+  destY = (int)(Double.parseDouble(cords[1])*height/2);
+  destZ = (int)(Double.parseDouble(cords[2]));
+  println("x: " + destX + " y: " + destY + " z: " + destZ);
 }
