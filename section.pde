@@ -6,8 +6,7 @@ class Section {
     this.startX = startX;
     this.startY = startY;
     this.len = len;
-    endX = (int)(this.startX + len*cos(this.direction));
-    endY = (int)(this.startY + len*sin(this.direction));
+    setDirection(direction);
   }
 
   void turnTo(int x, int y) {
@@ -16,8 +15,7 @@ class Section {
       direction = -direction;
     }
     
-    endX = (int)(this.startX + len*cos(this.direction));
-    endY = (int)(this.startY + len*sin(this.direction));
+    setDirection(direction);
   }
 
   void update(Section master) {
