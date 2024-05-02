@@ -14,7 +14,7 @@ class Section {
     if (y<=startY) {
       direction = -direction;
     }
-    
+
     setDirection(direction);
   }
 
@@ -23,18 +23,13 @@ class Section {
     this.startY = master.endY;
   }
 
-  void setDirection(float newDirection){
+  void setDirection(float newDirection) {
     this.direction = newDirection;
     endX = (int)(this.startX + len*cos(newDirection));
     endY = (int)(this.startY + len*sin(newDirection));
   }
 
   void show() {
-    line(
-      startX,
-      startY,
-      endX,
-      endY
-      );
+    line(startX, startY, endX, endY);
   }
 }
