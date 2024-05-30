@@ -1,9 +1,8 @@
-import hypermedia.net.*; //<>//
-UDP udp;
+import websockets.*; //<>//
+WebsocketServer ws;
 
 void setup() {
-  udp = new UDP(this, 8080);
-  udp.listen(true);
+  ws = new WebsocketServer(this, 8080, "");
 
   size(1000, 1000);
   //fullScreen();
@@ -28,10 +27,11 @@ void draw() {
   line(width/2, 0, width/2, height);
   translate(width/2, height/2);
 
-  //destX = mouseX - width/2; destY = mouseY - height/2;
+  //destX = mouseX - width/2;
+  //destY = mouseY - height/2;
 
   calculateAngles(s, c, destX, destY);
-  c.turnTo(destX, destY);
+
 
   strokeWeight(5);
   stroke(0);
@@ -45,14 +45,16 @@ void draw() {
 void calculateAngles(Section first, Section second, int x, int y) {
   float straightPath = dist(first.startX, first.startY, x, y);
   first.setDirection(
-    cosineRule(straightPath, x-first.startX, y-first.startY) + cosineRule(straightPath, first.len, second.len)
-    );
+    cosineRule(straightPath, x-first.startX, y-first.startY)
+    +
+    cosineRule(straightPath, first.len, second.len));
   if (Double.isNaN(first.direction)) {
     first.turnTo(x, y);
   } else if (y <= first.startX) {
     first.setDirection(-first.direction);
   }
   second.update(first);
+  second.turnTo(destX, destY);
 }
 
 /**
@@ -66,11 +68,9 @@ float cosineRule(float a, float b, float c) {
   return (float)(acos((c*c-a*a-b*b)/(bottom)));
 }
 
-void receive(byte[] data) {
-
-  data = subset(data, 0, data.length);
-  String message = new String( data );
-  String[] cords = message.split(",");
+void webSocketServerEvent(String msg) {
+  println(msg);
+  String[] cords = msg.split(",");
   destX = (int)(Double.parseDouble(cords[0])*width/2);
   destY = (int)(Double.parseDouble(cords[1])*height/2);
   destZ = (int)(Double.parseDouble(cords[2]));
